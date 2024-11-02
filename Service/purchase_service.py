@@ -15,3 +15,5 @@ class PurchaseService:
             db.add_all(data_list)
             db.commit()
             return True
+        
+    

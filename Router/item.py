@@ -8,6 +8,7 @@ from fastapi import Query, Request
 from Data.item import Item, ItemAdd
 from Database.models import User
 from Service.purchase_service import PurchaseService
+from Service.useritem_service import UserItemService
 router = APIRouter(tags=["items"], prefix="/items")
 
 @router.post("/add")
@@ -22,7 +23,9 @@ def add_item(request: Request, itemadd: ItemAdd):
 """
 @router.get("/{user_id}/item", response_model=List[Item])
 def get_userItem_all(request : Request, user_id: str):
-    return JSONResponse(status_code=HTTP_200_OK, content={"message": "Item added successfully"})
+    user_item_list = UserItemService.get_all_userItem(user_id)
+    user_item_list_dict = UserItemService.to_userItem_dict(user_item_list)
+    return JSONResponse(status_code=HTTP_200_OK, content={"items": user_item_list_dict})
 
 
 """
@@ -50,10 +53,3 @@ def add_item(request : Request, user_id: str, item_id: str):
 def add_items(request : Request, user_id: str):
     return JSONResponse(status_code=HTTP_200_OK, content={"message": "Item added successfully"})
 
-
-
-@router.get("/test")
-def test():
-    from Database.models import hash_id
-    print(hash_id())
-    return JSONResponse(status_code=HTTP_200_OK, content={"message": "User added successfully"})
