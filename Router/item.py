@@ -9,6 +9,7 @@ from starlette.status import *
 from fastapi import Query, Request
 from Data.item import Item, ItemAdd, UserItemAdd, UserItemConsume, ItemRead
 from Database.models import ItemCategory
+from Service.consume_service import ConsumeService
 from Service.embedding_service import EmbeddingService
 from Service.item_service import ItemService
 from Service.purchase_service import PurchaseService
@@ -29,7 +30,6 @@ def add_items(request: Request, itemadd: ItemAdd):
 """
 유저가 보유한 모든 아이템을 가져온다.
 """
-# 0개 제외
 @router.get("/{user_id}/item", response_model=List[ItemRead])
 def get_userItem_all(request : Request, user_id: str):
     user_item_list = UserItemService.get_all_userItem(user_id)
@@ -39,13 +39,14 @@ def get_userItem_all(request : Request, user_id: str):
 
 """
 유저가 아이템 소비
-TODO : 소비 기록 추가
 """
 @router.post("/consume")
 def consume_item(request : Request, user_item_consume: UserItemConsume):
     result = UserItemService.consume_userItem(user_item_consume)
     if result is False:
         return JSONResponse(status_code=HTTP_400_BAD_REQUEST, content={"message": "Item consume failed"})
+    consume_history = ConsumeService.consume_history_db(user_item_consume)
+    ConsumeService.purchase_history_save(consume_history)
     return JSONResponse(status_code=HTTP_200_OK, content={"message": "Item consumed successfully"})
 
 
