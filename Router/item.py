@@ -15,11 +15,18 @@ from Service.item_service import ItemService
 from Service.purchase_service import PurchaseService
 from Service.useritem_service import UserItemService
 import numpy as np
+
+from Utils.swagger import user_item_list_dict_example
+
 router = APIRouter(tags=["items"], prefix="/items")
 """
 물품을 리스트로 추가한다.
 """
-@router.post("/addall")
+
+@router.post("/addall", summary="여러 품목 구매", description="영수증, 유저 기입 물품 목록 추가", responses={
+    200: {"description": "성공", "content": {"application/json": {"example": {"message": "Item added successfully"}}}},
+    500: {"description": "실패"}
+})
 def add_items(request: Request, itemadd: ItemAdd):
     UserItemService.add_userItems(itemadd)
     purchase_history_list = PurchaseService.purchase_history_list_db(itemadd)
@@ -30,7 +37,10 @@ def add_items(request: Request, itemadd: ItemAdd):
 """
 유저가 보유한 모든 아이템을 가져온다.
 """
-@router.get("/{user_id}/item", response_model=List[ItemRead])
+@router.get("/{user_id}", summary="유저 아이템", description="유저 보유 물품 조회", responses={
+    200: {"description": "성공", "content": {"application/json": {"example": {"items": user_item_list_dict_example}}}},
+    500: {"description": "실패"}
+}, response_model=List[ItemRead])
 def get_userItem_all(request : Request, user_id: str):
     user_item_list = UserItemService.get_all_userItem(user_id)
     user_item_list_dict = UserItemService.to_userItem_dict(user_item_list)
@@ -40,7 +50,11 @@ def get_userItem_all(request : Request, user_id: str):
 """
 유저가 아이템 소비
 """
-@router.post("/consume")
+@router.post("/consume", summary="물품 소비", description="물품 소비", responses={
+    200: {"description": "성공", "content": {"application/json": {"example": {"message": "Item consumed successfully"}}}},
+    400: {"description": "실패", "content": {"application/json": {"example": {"message": "Item consume failed"}}}},
+    500: {"description": "실패"}
+})
 def consume_item(request : Request, user_item_consume: UserItemConsume):
     result = UserItemService.consume_userItem(user_item_consume)
     if result is False:
@@ -54,7 +68,11 @@ def consume_item(request : Request, user_item_consume: UserItemConsume):
 유저가 아이템 추가
 TODO : request body에 아이탬 개수 추가
 """
-@router.post("/addone")
+@router.post("/addone", summary="물품 하나 추가", description="물품 하나 추가", responses={
+    200: {"description": "성공", "content": {"application/json": {"example": {"message": "Item added successfully"}}}},
+    400: {"description": "실패", "content": {"application/json": {"example": {"message": "Too many items added"}}}},
+    500: {"description": "실패", "content": {"application/json": {"example": {"message": "Item added failed"}}}}
+})
 def add_item(request : Request, userItemAdd: UserItemAdd):
     try:
         UserItemService.add_userItem(userItemAdd)
@@ -65,7 +83,7 @@ def add_item(request : Request, userItemAdd: UserItemAdd):
         return JSONResponse(status_code=HTTP_400_BAD_REQUEST, content={"message": "Too many items added"})
     
 
-@router.get("/add/{item_name}/{base_consume_expectation}/{base_price}")
+@router.post("/add/{item_name}/{base_consume_expectation}/{base_price}", summary="아이템 추가")
 def add_item(request : Request, item_name: str, base_consume_expectation: int, base_price: int):
     category_embedding = []
     for category in ItemCategory.list():
