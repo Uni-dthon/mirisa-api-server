@@ -1,9 +1,8 @@
 from pydantic import BaseModel
 
 class User(BaseModel):
-    id : int
+    user_id : int
     name : str
-    email : str
     password : str
 
 class UserRead(User):

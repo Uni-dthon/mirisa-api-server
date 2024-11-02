@@ -13,13 +13,13 @@ class BaseEntity(Base):
 
 class User(BaseEntity):
     __tablename__ = "user"
-    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50), nullable=False)
     password = Column(String(50), nullable=False)
 
 class UserItem(BaseEntity):
     __tablename__ = "user_item"
     user_id = Column(Integer, nullable=False)
-    item_id = Column(Integer, nullable=False)
+    item_name = Column(Integer, nullable=False)
     count = Column(Integer, nullable=False)
     __table_args__ = (PrimaryKeyConstraint('user_id', 'item_id', name='user_item_pk'),)

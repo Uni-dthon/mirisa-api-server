@@ -2,8 +2,8 @@ from pydantic  import BaseModel
 from datetime import date
 
 class Item(BaseModel):
-    id : int
-    name : str
+    user_id : int
+    item_name : str
     count : int
 
 class ItemRead(Item):
