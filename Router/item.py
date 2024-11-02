@@ -19,10 +19,10 @@ import numpy as np
 from Utils.swagger import user_item_list_dict_example
 
 router = APIRouter(tags=["items"], prefix="/items")
+
 """
 물품을 리스트로 추가한다.
 """
-
 @router.post("/addall", summary="여러 품목 구매", description="영수증, 유저 기입 물품 목록 추가", responses={
     200: {"description": "성공", "content": {"application/json": {"example": {"message": "Item added successfully"}}}},
     500: {"description": "실패"}
