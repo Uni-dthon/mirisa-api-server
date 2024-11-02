@@ -28,6 +28,9 @@ class UserItemService:
         with get_db() as db:
             return db.query(UserItem).filter(UserItem.user_id == user_id, UserItem.count > 0).all()
 
+    def get_all_userItem_filtered_by_category(user_id: str, category: str):
+        with get_db() as db:
+            return db.query(UserItem).filter(UserItem.user_id == user_id, UserItem.count > 0).join(Item).filter(Item.item_category == category).all()
 
     def get_all_userItem_filtered_by_date(user_id, year: int, month: int):
         with get_db() as db:
@@ -35,7 +38,7 @@ class UserItemService:
                     extract("month", UserItem.consume_date) == month).all()
 
 
-    def to_userItem_dict(userItemList: List[UserItem]):
+    def to_userItem_dict(userItemList: List[UserItem], category: str):
         itemlist = []
 
         for userItem in userItemList:
