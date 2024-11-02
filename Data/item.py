@@ -21,5 +21,5 @@ class UserItemAdd(BaseModel):
     price: int
     purchase_date: date
 
-class ItemAdd(Item):
+class ItemAdd(BaseModel):
     items: list[UserItemAdd]

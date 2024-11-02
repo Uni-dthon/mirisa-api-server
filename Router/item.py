@@ -9,8 +9,8 @@ from Service.purchase_service import PurchaseService
 router = APIRouter(tags=["items"], prefix="/items")
 
 @router.post("/add")
-def add_item(request: Request, items: ItemAdd):
-    purchase_history_list = PurchaseService.purchase_history_list_db(items)
+def add_item(request: Request, itemadd: ItemAdd):
+    purchase_history_list = PurchaseService.purchase_history_list_db(itemadd.items)
     PurchaseService.purchase_history_list_save(purchase_history_list)
     return JSONResponse(status_code=HTTP_200_OK, content={"message": "Item added successfully"})
 
