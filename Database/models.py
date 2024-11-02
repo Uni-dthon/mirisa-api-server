@@ -16,6 +16,10 @@ class ItemCategory(str, enum.Enum):
     LIVINGROOM = "livingroom"
     CLEANROOM = "laundryroom"
 
+    @classmethod
+    def list(cls):
+        return [category.value for category in cls]
+
 
 class BaseEntity(Base):
     __abstract__ = True
