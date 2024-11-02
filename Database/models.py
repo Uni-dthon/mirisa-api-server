@@ -42,7 +42,6 @@ class Item(BaseEntity):
     item_category = Column(Enum(ItemCategory), nullable=False)
     base_consume_expectation = Column(Integer, nullable=False)
     base_price = Column(Integer, nullable=False)
-    base_count = Column(Integer, nullable=False)
     embedding = Column(JSON, nullable=True)
 
 
