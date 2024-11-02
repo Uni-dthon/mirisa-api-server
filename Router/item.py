@@ -56,7 +56,7 @@ TODO : request body에 아이탬 개수 추가
 def add_item(request : Request, userItemAdd: UserItemAdd):
     try:
         UserItemService.add_userItem(userItemAdd)
-        purchaseHistory = PurchaseService.get_purchase_history(userItemAdd)
+        purchaseHistory = PurchaseService.purchase_history_db(userItemAdd)
         PurchaseService.purchase_history_save(purchaseHistory)
         return JSONResponse(status_code=HTTP_200_OK, content={"message": "Item added successfully"})
     except OverflowError as e:
