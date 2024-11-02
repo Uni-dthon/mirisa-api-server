@@ -17,7 +17,7 @@ db = SessionLocal()
 
 def create_database():
     with temp_engine.connect() as conn:
-        conn.execute(text(f"CREATE DATABASE IF NOT EXISTS planner"))
+        conn.execute(text(f"CREATE DATABASE IF NOT EXISTS mirisa"))
         conn.commit()
     Base.metadata.create_all(bind=engine)
 
