@@ -11,10 +11,10 @@ def hash_id():
     return str(uuid.uuid4().hex)
 
 class ItemCategory(str, enum.Enum):
-    KITCHEN = "kitchen"
-    BATHROOM = "bathroom"
-    LIVINGROOM = "livingroom"
-    CLEANROOM = "laundryroom"
+    주방 = "주방"
+    욕실 = "욕실"
+    거실 = "거실"
+    세탁실 = "세탁실"
 
     @classmethod
     def list(cls):
