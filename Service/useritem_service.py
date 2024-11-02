@@ -2,7 +2,6 @@ from datetime import timedelta, datetime
 from select import select
 from typing import Optional, List, Annotated
 
-from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import extract
 
 from Data.item import UserItemAdd, ItemAdd, UserItemConsume
@@ -53,6 +52,8 @@ class UserItemService:
     def add_userItem(itemAdd: UserItemAdd):
         with get_db() as db:
             useritem = db.query(UserItem).filter(UserItem.user_id == itemAdd.user_id, UserItem.item_name == itemAdd.item_name).first()
+            if useritem is None:
+                raise Exception("UserItem not found")
 
             if useritem.consume_date is None or useritem.count == 0:
                 useritem.consume_date = itemAdd.purchase_date
@@ -62,10 +63,11 @@ class UserItemService:
             db.commit()
         return True
 
+
     @staticmethod
     def add_userItems(itemAdd : ItemAdd):
-        for addItem in itemAdd.items:
-            with get_db() as db:
+        with get_db() as db:
+            for addItem in itemAdd.items:
                 useritem = db.query(UserItem).filter(UserItem.user_id == addItem.user_id, UserItem.item_name == addItem.item_name).first()
 
                 if useritem.consume_date is None or useritem.count == 0:
@@ -73,7 +75,7 @@ class UserItemService:
 
                 useritem.count += addItem.count
                 useritem.consume_date += timedelta(days=useritem.consume_expectation * addItem.count)
-                db.commit()
+            db.commit()
         return True
     
     def consume_userItem(userItemConsume: UserItemConsume):

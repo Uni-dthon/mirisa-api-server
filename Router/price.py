@@ -1,11 +1,8 @@
 from fastapi.responses import JSONResponse
 
-from Data.user import LoginUser, UserCreate
-from Database.database import get_db
 from fastapi import APIRouter
 from starlette.status import *
 from fastapi import Query, Request
-from Database.models import User
 from Service.item_service import ItemService
 from Service.purchase_service import PurchaseService
 from Service.useritem_service import UserItemService

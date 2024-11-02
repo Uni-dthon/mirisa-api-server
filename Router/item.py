@@ -2,8 +2,6 @@ from typing import List
 
 from fastapi.responses import JSONResponse
 
-from Data.user import LoginUser, UserCreate
-from Database.database import get_db
 from fastapi import APIRouter
 from starlette.status import *
 from fastapi import Query, Request
@@ -13,26 +11,31 @@ from Service.consume_service import ConsumeService
 from Service.embedding_service import EmbeddingService
 from Service.item_service import ItemService
 from Service.purchase_service import PurchaseService
+from Service.user_service import UserService
 from Service.useritem_service import UserItemService
 import numpy as np
 
 from Utils.swagger import user_item_list_dict_example
 
 router = APIRouter(tags=["items"], prefix="/items")
+
 """
 물품을 리스트로 추가한다.
 """
-
 @router.post("/addall", summary="여러 품목 구매", description="영수증, 유저 기입 물품 목록 추가", responses={
     200: {"description": "성공", "content": {"application/json": {"example": {"message": "Item added successfully"}}}},
     500: {"description": "실패"}
 })
 def add_items(request: Request, itemadd: ItemAdd):
-    UserItemService.add_userItems(itemadd)
-    purchase_history_list = PurchaseService.purchase_history_list_db(itemadd)
-    PurchaseService.purchase_history_list_save(purchase_history_list)
-    return JSONResponse(status_code=HTTP_200_OK, content={"message": "Item added successfully"})
-
+    try:
+        # 존재하지 않는 유저 아이디 들어오면 새로 생성
+        user = UserService.get_user_or_create(itemadd.items[0].user_id)
+        UserItemService.add_userItems(itemadd)
+        purchase_history_list = PurchaseService.purchase_history_list_db(itemadd)
+        PurchaseService.purchase_history_list_save(purchase_history_list)
+        return JSONResponse(status_code=HTTP_200_OK, content={"message": "Item added successfully"})
+    except Exception as e:
+        return JSONResponse(status_code=HTTP_500_INTERNAL_SERVER_ERROR, content={"message": str(e)})
 
 """
 유저가 보유한 모든 아이템을 가져온다.
@@ -42,6 +45,9 @@ def add_items(request: Request, itemadd: ItemAdd):
     500: {"description": "실패"}
 }, response_model=List[ItemRead])
 def get_userItem_all(request : Request, user_id: str):
+    user = UserService.get_user_by_id(user_id)
+    if user is None:
+        return JSONResponse(status_code=HTTP_500_INTERNAL_SERVER_ERROR, content={"message": "User not found"})
     user_item_list = UserItemService.get_all_userItem(user_id)
     user_item_list_dict = UserItemService.to_userItem_dict(user_item_list)
     return JSONResponse(status_code=HTTP_200_OK, content={"items": user_item_list_dict})
@@ -78,13 +84,16 @@ TODO : request body에 아이탬 개수 추가
 })
 def add_item(request : Request, userItemAdd: UserItemAdd):
     try:
+        user = UserService.get_user_or_create(userItemAdd.user_id)
+        userItemAdd.user_id = user.user_id
         UserItemService.add_userItem(userItemAdd)
         purchaseHistory = PurchaseService.purchase_history_db(userItemAdd)
         PurchaseService.purchase_history_save(purchaseHistory)
         return JSONResponse(status_code=HTTP_200_OK, content={"message": "Item added successfully"})
     except OverflowError as e:
         return JSONResponse(status_code=HTTP_400_BAD_REQUEST, content={"message": "Too many items added"})
-    
+    except Exception as e:
+        return JSONResponse(status_code=HTTP_500_INTERNAL_SERVER_ERROR, content={"message": str(e)})
 
 @router.post("/add/{item_name}/{base_consume_expectation}/{base_price}", summary="아이템 추가")
 def add_item(request : Request, item_name: str, base_consume_expectation: int, base_price: int):
