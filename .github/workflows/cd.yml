@@ -1,25 +1,22 @@
-name: Backend Deploy
+name: Deploy to EC2
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
-  build_and_push:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-          EC2_USER: 'ubuntu'
-          EC2_HOST: 'ec2-3-38-23-48.ap-northeast-2.compute.amazonaws.com'
+      - name: Set up SSH
         run: |
-          echo "$SSH_PRIVATE_KEY" > private_key.pem
-          chmod 600 private_key.pem
-          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST 'bash /home/ubuntu/deploy.sh'
-          rm private_key.pem  # SSH 키 파일 삭제
+          echo "${{ secrets.EC2_SSH_KEY }}" > private_key
+          chmod 600 private_key
+
+      - name: Deploy to EC2
+        run: |
+          ssh -i private_key -o StrictHostKeyChecking=no ubuntu@ec2-3-38-23-48.ap-northeast-2.compute.amazonaws.com 'bash ~/deploy.sh'
