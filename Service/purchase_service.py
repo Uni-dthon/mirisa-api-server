@@ -18,7 +18,7 @@ class PurchaseService:
             db.commit()
             return True
 
-    def get_purchase_history(data : UserItemAdd):
+    def purchase_history_db(data : UserItemAdd):
         with get_db() as db:
             item_id = db.query(UserItem).filter(UserItem.user_id == data.user_id, UserItem.item_name == data.item_name).first().item_id
             return PurchaseHistory(user_id=data.user_id, item_id=item_id, price=data.price, count=1, date=data.purchase_date)
@@ -27,3 +27,8 @@ class PurchaseService:
         with get_db() as db:
             db.add(data)
             db.commit()
+
+
+    def get_purchase_histories_by_item_id(item_id: str):
+        with get_db() as db:
+            return db.query(PurchaseHistory).filter(PurchaseHistory.item_id == item_id).all()
