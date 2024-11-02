@@ -62,3 +62,12 @@ class UserItemService:
                 useritem.consume_date += timedelta(days=useritem.consume_expectation * addItem.count)
                 db.commit()
         return True
+    
+    def consume_userItem(userItemConsume: UserItemAdd):
+        with get_db() as db:
+            useritem = db.query(UserItem).filter(UserItem.user_id == userItemConsume.user_id, UserItem.item_name == userItemConsume.item_name).first()
+            if useritem.count - userItemConsume.count < 0:
+                return False
+            useritem.count -= userItemConsume.count
+            db.commit()
+        return True

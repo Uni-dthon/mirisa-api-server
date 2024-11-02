@@ -7,7 +7,7 @@ from Database.database import get_db
 from fastapi import APIRouter
 from starlette.status import *
 from fastapi import Query, Request
-from Data.item import Item, ItemAdd, UserItemAdd
+from Data.item import Item, ItemAdd, UserItemAdd, UserItemConsume
 from Database.models import User
 from Service.purchase_service import PurchaseService
 from Service.useritem_service import UserItemService
@@ -38,7 +38,10 @@ def get_userItem_all(request : Request, user_id: str):
 TODO : request body에 아이템 개수 추가
 """
 @router.post("/{user_id}/item/{item_name}/consume")
-def consume_item(request : Request, user_id: str, item_name: str):
+def consume_item(request : Request, user_id: str, user_item_consume: UserItemConsume):
+    result = UserItemService.consume_userItem(user_item_consume)
+    if result is False:
+        return JSONResponse(status_code=HTTP_400_BAD_REQUEST, content={"message": "Item consume failed"})
     return JSONResponse(status_code=HTTP_200_OK, content={"message": "Item consumed successfully"})
 
 

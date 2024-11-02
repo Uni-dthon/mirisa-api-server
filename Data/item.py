@@ -23,3 +23,9 @@ class UserItemAdd(BaseModel):
 
 class ItemAdd(BaseModel):
     items: list[UserItemAdd]
+
+class UserItemConsume(BaseModel):
+    user_id: str
+    item_name: str
+    consume_count: int
+    consume_date: date
