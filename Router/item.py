@@ -13,9 +13,10 @@ from Service.purchase_service import PurchaseService
 from Service.useritem_service import UserItemService
 router = APIRouter(tags=["items"], prefix="/items")
 
-@router.post("/add")
-def add_item(request: Request, itemadd: ItemAdd):
-    purchase_history_list = PurchaseService.purchase_history_list_db(itemadd.items)
+@router.post("/addall")
+def add_items(request: Request, itemadd: ItemAdd):
+    UserItemService.add_userItems(itemadd)
+    purchase_history_list = PurchaseService.purchase_history_list_db(itemadd)
     PurchaseService.purchase_history_list_save(purchase_history_list)
     return JSONResponse(status_code=HTTP_200_OK, content={"message": "Item added successfully"})
 
@@ -34,8 +35,8 @@ def get_userItem_all(request : Request, user_id: str):
 유저가 아이템 소비
 TODO : request body에 아이템 개수 추가
 """
-@router.post("/{user_id}/item/{item_id}/consume")
-def consume_item(request : Request, user_id: str, item_id: str):
+@router.post("/{user_id}/item/{item_name}/consume")
+def consume_item(request : Request, user_id: str, item_name: str):
     return JSONResponse(status_code=HTTP_200_OK, content={"message": "Item consumed successfully"})
 
 
@@ -43,8 +44,10 @@ def consume_item(request : Request, user_id: str, item_id: str):
 유저가 아이템 추가
 TODO : request body에 아이탬 개수 추가
 """
-@router.post("/{user_id}/item/{item_id}/addition")
-def add_item(request : Request, user_id: str, item_id: str):
+@router.post("/addone")
+def add_item(request : Request, userItemAdd: UserItemAdd):
+    UserItemService.add_userItem(userItemAdd)
+    PurchaseService.purchase_history_save(userItemAdd)
     return JSONResponse(status_code=HTTP_200_OK, content={"message": "Item added successfully"})
 
 

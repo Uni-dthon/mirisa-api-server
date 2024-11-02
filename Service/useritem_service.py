@@ -1,8 +1,10 @@
+from datetime import timedelta, datetime
 from select import select
-from typing import Optional, List
+from typing import Optional, List, Annotated
 
 from sqlalchemy.orm import Session
 
+from Data.item import UserItemAdd, ItemAdd
 from Database.database import get_db
 from Database.models import UserItem
 from .item_service import ItemService
@@ -34,3 +36,29 @@ class UserItemService:
             "consume_date": userItem.consume_date,
             "consume_expectation": userItem.consume_expectation
         } for userItem in userItemList]
+
+    def add_userItem(itemAdd: UserItemAdd):
+        with get_db() as db:
+            useritem = db.query(UserItem).filter(UserItem.user_id == itemAdd.user_id, UserItem.item_name == itemAdd.item_name).first()
+
+            if useritem.consume_date is None or useritem.count == 0:
+                useritem.consume_date = itemAdd.purchase_date
+
+            useritem.count += itemAdd.count
+            useritem.consume_date += timedelta(days=useritem.consume_expectation * itemAdd.count)
+            db.commit()
+        return True
+
+    @staticmethod
+    def add_userItems(itemAdd : ItemAdd):
+        for addItem in itemAdd.items:
+            with get_db() as db:
+                useritem = db.query(UserItem).filter(UserItem.user_id == addItem.user_id, UserItem.item_name == addItem.item_name).first()
+
+                if useritem.consume_date is None or useritem.count == 0:
+                    useritem.consume_date = addItem.purchase_date
+
+                useritem.count += addItem.count
+                useritem.consume_date += timedelta(days=useritem.consume_expectation * addItem.count)
+                db.commit()
+        return True
