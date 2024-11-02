@@ -41,4 +41,4 @@ jobs:
         run: |
           echo "${SSH_PRIVATE_KEY}" > private_key
           chmod 600 private_key
-          ssh -i private_key $EC2_USER@$EC2_HOST 'sudo lsof -t -i :1500 | xargs sudo kill -9 && screen -S server -d -m bash -c "source myenv/bin/activate && cd ~/mirisa_server && python3 main.py"'
+          ssh -i private_key $EC2_USER@$EC2_HOST 'sudo lsof -t -i :8000 | xargs sudo kill -9 && screen -S server -d -m bash -c "source myenv/bin/activate && cd ~/mirisa_server && python3 main.py"'
