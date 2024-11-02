@@ -8,6 +8,7 @@ from Data.item import UserItemAdd, ItemAdd, UserItemConsume
 from Database.database import get_db
 from Database.models import UserItem, Item
 from .item_service import ItemService
+from .purchase_service import PurchaseService
 
 """
 useritem crud
@@ -42,11 +43,22 @@ class UserItemService:
         itemlist = []
 
         for userItem in userItemList:
+            purchases = PurchaseService.get_purchase_histories_by_item_id(userItem.item_id)
+            price = 0
+
+            if len(purchases) == 0:
+                item = ItemService.get_item(userItem.item_name)
+                price += item.base_price
+            else:
+                price = sum([purchase.price for purchase in purchases]) / len(purchases)
+
+
             itemlist.append({
                 "user_id": userItem.user_id,
                 "item_name": userItem.item_name,
                 "count": userItem.count,
                 "category": category,
+                "price" : price,
                 "consume_date": userItem.consume_date.strftime("%Y-%m-%d") if userItem.consume_date is not None else None,
             })
         return itemlist
@@ -58,11 +70,21 @@ class UserItemService:
         with get_db() as db:
             for userItem in userItemList:
                 item = db.query(Item).filter(Item.item_name == userItem.item_name).first()
+                purchases = PurchaseService.get_purchase_histories_by_item_id(userItem.item_id)
+                price = 0
+
+                if len(purchases) == 0:
+                    item = ItemService.get_item(userItem.item_name)
+                    price += item.base_price
+                else:
+                    price = sum([purchase.price for purchase in purchases]) / len(purchases)
+
                 itemlist.append({
                     "user_id": userItem.user_id,
                     "item_name": userItem.item_name,
                     "count": userItem.count,
                     "category": item.item_category,
+                    "price" : price,
                     "consume_date": userItem.consume_date.strftime("%Y-%m-%d") if userItem.consume_date is not None else None,
                 })
         return itemlist
@@ -96,7 +118,7 @@ class UserItemService:
             db.commit()
         return True
     
-    def consume_userItem(userItemConsume: UserItemConsume):
+    def consume_userItem(userItemConsume: UserItemConsume, expectation: Optional[int] = None):
         with get_db() as db:
             useritem = db.query(UserItem).filter(UserItem.user_id == userItemConsume.user_id, UserItem.item_name == userItemConsume.item_name).first()
             if useritem.count - userItemConsume.consume_count < 0:

@@ -9,6 +9,7 @@ class Item(BaseModel):
 class ItemRead(Item):
     count : int
     category : str
+    price: float
     consume_date: date
 
 class ItemConsume(Item):
