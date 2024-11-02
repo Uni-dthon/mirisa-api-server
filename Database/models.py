@@ -53,8 +53,8 @@ class UserItem(BaseEntity):
 class ConsumeHistory(BaseEntity):
     __tablename__ = "consume_history"
     consume_history_id = Column(String(50), default=hash_id, primary_key=True, index=True)
-    user_id = Column(Integer, nullable=False) #fk problems at here
-    item_id = Column(Integer, nullable=False) #fk problems at here
+    user_id = Column(String(50), nullable=False) #fk problems at here
+    item_id = Column(String(50), nullable=False) #fk problems at here
     count = Column(Integer, nullable=False)
     date = Column(DateTime, nullable=False)
 
