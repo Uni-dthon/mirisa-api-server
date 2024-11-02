@@ -21,7 +21,7 @@ class PurchaseService:
     def purchase_history_db(data : UserItemAdd):
         with get_db() as db:
             item_id = db.query(UserItem).filter(UserItem.user_id == data.user_id, UserItem.item_name == data.item_name).first().item_id
-            return PurchaseHistory(user_id=data.user_id, item_id=item_id, price=data.price, count=1, date=data.purchase_date)
+            return PurchaseHistory(user_id=data.user_id, item_id=item_id, price=data.price, count=data.count, date=data.purchase_date)
         
     def purchase_history_save(data : PurchaseHistory):
         with get_db() as db:
