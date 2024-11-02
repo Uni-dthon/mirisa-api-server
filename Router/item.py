@@ -1,6 +1,8 @@
 from typing import List
 
 from fastapi.responses import JSONResponse
+
+from Data.user import LoginUser, UserCreate
 from Database.database import get_db
 from fastapi import APIRouter
 from starlette.status import *
@@ -52,4 +54,3 @@ def add_item(request : Request, user_id: str, item_id: str):
 @router.post("/{user_id}/receipt")
 def add_items(request : Request, user_id: str):
     return JSONResponse(status_code=HTTP_200_OK, content={"message": "Item added successfully"})
-
