@@ -49,5 +49,6 @@ TODO : request body에 아이탬 개수 추가
 @router.post("/addone")
 def add_item(request : Request, userItemAdd: UserItemAdd):
     UserItemService.add_userItem(userItemAdd)
-    PurchaseService.purchase_history_save(userItemAdd)
+    purchaseHistory = PurchaseService.get_purchase_history(userItemAdd)
+    PurchaseService.purchase_history_save(purchaseHistory)
     return JSONResponse(status_code=HTTP_200_OK, content={"message": "Item added successfully"})
