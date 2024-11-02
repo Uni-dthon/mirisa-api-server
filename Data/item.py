@@ -14,6 +14,12 @@ class ItemRead(Item):
 class ItemConsume(Item):
     consume_count: int
 
+class UserItemAdd(BaseModel):
+    user_id: str
+    item_name: str
+    count: int
+    price: int
+    purchase_date: date
 
 class ItemAdd(Item):
-    add_count: int
+    items: list[UserItemAdd]
