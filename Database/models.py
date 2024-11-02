@@ -33,6 +33,7 @@ class User(BaseEntity):
 
 class Item(BaseEntity):
     __tablename__ = "item"
+    id = Column(Integer, primary_key=True, index=True)
     item_name = Column(String(50), index=True)
     item_category = Column(Enum(ItemCategory), nullable=False)
     base_consume_expectation = Column(Integer, nullable=False)
