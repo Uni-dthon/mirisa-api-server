@@ -43,19 +43,17 @@ class Item(BaseEntity):
 class UserItem(BaseEntity):
     __tablename__ = "user_item"
     user_id = Column(Integer, ForeignKey("user.user_id"), nullable=False)
-    item_id = Column(Integer, default=hash_id, nullable=False)
+    item_id = Column(Integer, primary_key=True, default=hash_id, index=True)
     item_name = Column(String(50), ForeignKey("item.item_name"), nullable=False)
     count = Column(Integer, nullable=False)
     consume_date = Column(DateTime, nullable=True)
     consume_expectation = Column(Integer, nullable=False)
-    __table_args__ = (PrimaryKeyConstraint('user_id', 'item_name', name='user_id_item_name_pk'),)
-
 
 class ConsumeHistory(BaseEntity):
     __tablename__ = "consume_history"
     consume_history_id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("user.user_id"), nullable=False)
-    item_id = Column(Integer, ForeignKey("user_item.item_id"), nullable=False)
+    item_id = Column(Integer, nullable=False)
     count = Column(Integer, nullable=False)
     date = Column(DateTime, nullable=False)
 
@@ -63,7 +61,7 @@ class PurchaseHistory(BaseEntity):
     __tablename__ = "purchase_history"
     purchase_history_id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("user.user_id"), nullable=False)
-    item_id = Column(Integer, ForeignKey("user_item.item_id"), nullable=False)
+    item_id = Column(Integer, nullable=False)
     price = Column(Integer, nullable=False)
     count = Column(Integer, nullable=False)
     date = Column(DateTime, nullable=False)
