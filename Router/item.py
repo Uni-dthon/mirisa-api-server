@@ -61,6 +61,9 @@ def consume_item(request : Request, user_item_consume: UserItemConsume):
         return JSONResponse(status_code=HTTP_400_BAD_REQUEST, content={"message": "Item consume failed"})
     consume_history = ConsumeService.consume_history_db(user_item_consume)
     ConsumeService.purchase_history_save(consume_history)
+    expectation = ConsumeService.calculate_consume_expectation(user_item_consume.user_id, user_item_consume.item_name)
+    if expectation:
+        ConsumeService.set_consume_expectation(user_item_consume.user_id, user_item_consume.item_name, expectation)
     return JSONResponse(status_code=HTTP_200_OK, content={"message": "Item consumed successfully"})
 
 
