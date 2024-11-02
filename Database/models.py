@@ -14,7 +14,7 @@ class ItemCategory(str, enum.Enum):
     KITCHEN = "kitchen"
     BATHROOM = "bathroom"
     LIVINGROOM = "livingroom"
-    CLEANROOM = "cleanroom"
+    CLEANROOM = "laundryroom"
 
 
 class BaseEntity(Base):
@@ -26,24 +26,25 @@ class BaseEntity(Base):
 
 class User(BaseEntity):
     __tablename__ = "user"
-    user_id = Column(Integer, default=hash_id,primary_key=True, index=True)
+    user_id = Column(String(50), default=hash_id, primary_key=True, index=True)
     name = Column(String(50), nullable=False)
     password = Column(String(50), nullable=False)
 
 
 class Item(BaseEntity):
     __tablename__ = "item"
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(String(50), default=hash_id, primary_key=True, index=True)
     item_name = Column(String(50), index=True)
     item_category = Column(Enum(ItemCategory), nullable=False)
     base_consume_expectation = Column(Integer, nullable=False)
     base_price = Column(Integer, nullable=False)
+    embedding = Column(JSON, nullable=True)
 
 
 class UserItem(BaseEntity):
     __tablename__ = "user_item"
-    user_id = Column(Integer, ForeignKey("user.user_id"), nullable=False)
-    item_id = Column(Integer, primary_key=True, default=hash_id, index=True)
+    user_id = Column(String(50), ForeignKey("user.user_id"), nullable=False)
+    item_id = Column(String(50), primary_key=True, default=hash_id, index=True)
     item_name = Column(String(50), ForeignKey("item.item_name"), nullable=False)
     count = Column(Integer, nullable=False)
     consume_date = Column(DateTime, nullable=True)
@@ -51,17 +52,17 @@ class UserItem(BaseEntity):
 
 class ConsumeHistory(BaseEntity):
     __tablename__ = "consume_history"
-    consume_history_id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("user.user_id"), nullable=False)
-    item_id = Column(Integer, nullable=False)
+    consume_history_id = Column(String(50), default=hash_id, primary_key=True, index=True)
+    user_id = Column(Integer, nullable=False) #fk problems at here
+    item_id = Column(Integer, nullable=False) #fk problems at here
     count = Column(Integer, nullable=False)
     date = Column(DateTime, nullable=False)
 
 class PurchaseHistory(BaseEntity):
     __tablename__ = "purchase_history"
-    purchase_history_id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("user.user_id"), nullable=False)
-    item_id = Column(Integer, nullable=False)
+    purchase_history_id = Column(String(50), default=hash_id, primary_key=True, index=True)
+    user_id = Column(String(50), nullable=False) #fk problems at here
+    item_id = Column(String(50), nullable=False) #fk problems at here
     price = Column(Integer, nullable=False)
     count = Column(Integer, nullable=False)
     date = Column(DateTime, nullable=False)
