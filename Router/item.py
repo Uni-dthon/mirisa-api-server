@@ -41,7 +41,7 @@ def get_userItem_all(request : Request, user_id: str):
 TODO : request body에 아이템 개수 추가
 """
 @router.post("/consume")
-def consume_item(request : Request, user_id: str, user_item_consume: UserItemConsume):
+def consume_item(request : Request, user_item_consume: UserItemConsume):
     result = UserItemService.consume_userItem(user_item_consume)
     if result is False:
         return JSONResponse(status_code=HTTP_400_BAD_REQUEST, content={"message": "Item consume failed"})
