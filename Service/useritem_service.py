@@ -3,6 +3,7 @@ from select import select
 from typing import Optional, List, Annotated
 
 from sqlalchemy.orm import Session
+from sqlalchemy.sql.expression import extract
 
 from Data.item import UserItemAdd, ItemAdd
 from Database.database import get_db
@@ -27,6 +28,12 @@ class UserItemService:
     def get_all_userItem(user_id: str):
         with get_db() as db:
             return db.query(UserItem).filter(UserItem.user_id == user_id).all()
+
+
+    def get_all_userItem_filtered_by_date(user_id, year: int, month: int):
+        with get_db() as db:
+            return db.query(UserItem).filter(UserItem.user_id == user_id, extract("year", UserItem.consume_date) == year,
+                    extract("month", UserItem.consume_date) == month).all()
 
 
     def to_userItem_dict(userItemList: List[UserItem]):
