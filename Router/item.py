@@ -7,7 +7,7 @@ from Database.database import get_db
 from fastapi import APIRouter
 from starlette.status import *
 from fastapi import Query, Request
-from Data.item import Item, ItemAdd
+from Data.item import Item, ItemAdd, UserItemAdd
 from Database.models import User
 from Service.purchase_service import PurchaseService
 from Service.useritem_service import UserItemService
