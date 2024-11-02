@@ -22,4 +22,6 @@ class UserItem(BaseEntity):
     user_id = Column(Integer, nullable=False)
     item_name = Column(Integer, nullable=False)
     count = Column(Integer, nullable=False)
+    consume_date = Column(DateTime, nullable=True)
+    consume_expectation = Column(Integer, nullable=False)
     __table_args__ = (PrimaryKeyConstraint('user_id', 'item_id', name='user_item_pk'),)
