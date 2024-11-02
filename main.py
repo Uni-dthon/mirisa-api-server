@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from starlette.status import *
 import uvicorn
 from Database.database import db, create_database, engine
-from Router import *
+from Router import item
 from dotenv import load_dotenv
 create_database()
 
@@ -21,6 +21,7 @@ SWAGGER_HEADERS = {
     "description": "",}
 
 # app = FastAPI()
+
 
 # 스웨거 예시 표시
 app = FastAPI(
@@ -35,6 +36,8 @@ app = FastAPI(
     },
     **SWAGGER_HEADERS
 )
+
+app.include_router(item.router)
 
 # CORS
 origins = [

@@ -3,7 +3,7 @@ from Database.database import get_db
 from fastapi import APIRouter
 from starlette.status import *
 from fastapi import Query, Request
-from item import Item
+from Data.item import Item
 
 router = APIRouter(tags=["items"], prefix="/items")
 
