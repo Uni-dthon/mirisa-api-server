@@ -25,3 +25,24 @@ class UserItem(BaseEntity):
     consume_date = Column(DateTime, nullable=True)
     consume_expectation = Column(Integer, nullable=False)
     __table_args__ = (PrimaryKeyConstraint('user_id', 'item_id', name='user_item_pk'),)
+
+class ConsumeHistory(BaseEntity):
+    __tablename__ = "consume_history"
+    consume_history_id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("user.user_id"), nullable=False)
+    item_name = Column(Integer, ForeignKey("item.item_name"), nullable=False)
+    count = Column(Integer, nullable=False)
+    date = Column(DateTime, nullable=False)
+
+
+class Item(BaseEntity):
+    __tablename__ = "item"
+    item_name = Column(Integer, primary_key=True, index=True)
+    item_description = Column(String(50), nullable=False)
+    item_category = Column(String, ForeignKey("item_category.item_category"), nullable=False)
+    base_consume_expectation = Column(Integer, nullable=False)
+
+class ItemCategory(BaseEntity):
+    __tablename__ = "item_category"
+    item_category = Column(String(50), primary_key=True, index=True)
+    item_category_description = Column(String(50), nullable=False)
