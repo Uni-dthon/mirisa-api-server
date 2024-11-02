@@ -12,7 +12,9 @@ from Database.models import User
 from Service.purchase_service import PurchaseService
 from Service.useritem_service import UserItemService
 router = APIRouter(tags=["items"], prefix="/items")
-
+"""
+물품을 리스트로 추가한다.
+"""
 @router.post("/addall")
 def add_items(request: Request, itemadd: ItemAdd):
     UserItemService.add_userItems(itemadd)
@@ -48,12 +50,4 @@ TODO : request body에 아이탬 개수 추가
 def add_item(request : Request, userItemAdd: UserItemAdd):
     UserItemService.add_userItem(userItemAdd)
     PurchaseService.purchase_history_save(userItemAdd)
-    return JSONResponse(status_code=HTTP_200_OK, content={"message": "Item added successfully"})
-
-
-"""
-유저가 영수증 / 직접 아이템 추가
-"""
-@router.post("/{user_id}/receipt")
-def add_items(request : Request, user_id: str):
     return JSONResponse(status_code=HTTP_200_OK, content={"message": "Item added successfully"})
