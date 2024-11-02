@@ -5,7 +5,7 @@ from typing import Optional, List, Annotated
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import extract
 
-from Data.item import UserItemAdd, ItemAdd
+from Data.item import UserItemAdd, ItemAdd, UserItemConsume
 from Database.database import get_db
 from Database.models import UserItem, Item
 from .item_service import ItemService
@@ -76,7 +76,7 @@ class UserItemService:
                 db.commit()
         return True
     
-    def consume_userItem(userItemConsume: UserItemAdd):
+    def consume_userItem(userItemConsume: UserItemConsume):
         with get_db() as db:
             useritem = db.query(UserItem).filter(UserItem.user_id == userItemConsume.user_id, UserItem.item_name == userItemConsume.item_name).first()
             if useritem.count - userItemConsume.count < 0:
