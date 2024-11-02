@@ -7,7 +7,7 @@ from Database.database import get_db
 from fastapi import APIRouter
 from starlette.status import *
 from fastapi import Query, Request
-from Data.item import Item, ItemAdd, UserItemAdd, UserItemConsume
+from Data.item import Item, ItemAdd, UserItemAdd, UserItemConsume, ItemRead
 from Database.models import User
 from Service.purchase_service import PurchaseService
 from Service.useritem_service import UserItemService
@@ -26,7 +26,7 @@ def add_items(request: Request, itemadd: ItemAdd):
 """
 유저가 보유한 모든 아이템을 가져온다.
 """
-@router.get("/{user_id}/item", response_model=List[Item])
+@router.get("/{user_id}/item", response_model=List[ItemRead])
 def get_userItem_all(request : Request, user_id: str):
     user_item_list = UserItemService.get_all_userItem(user_id)
     user_item_list_dict = UserItemService.to_userItem_dict(user_item_list)

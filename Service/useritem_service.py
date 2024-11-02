@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from Data.item import UserItemAdd, ItemAdd
 from Database.database import get_db
-from Database.models import UserItem
+from Database.models import UserItem, Item
 from .item_service import ItemService
 
 """
@@ -27,15 +27,21 @@ class UserItemService:
     def get_all_userItem(user_id: str):
         with get_db() as db:
             return db.query(UserItem).filter(UserItem.user_id == user_id).all()
-        
+
+
     def to_userItem_dict(userItemList: List[UserItem]):
-        return [{
-            "user_id": userItem.user_id,
-            "item_name": userItem.item_name,
-            "count": userItem.count,
-            "consume_date": userItem.consume_date,
-            "consume_expectation": userItem.consume_expectation
-        } for userItem in userItemList]
+        itemlist = []
+        with get_db() as db:
+            for userItem in userItemList:
+                item = db.query(Item).filter(Item.item_name == userItem.item_name).first()
+                itemlist.append({
+                    "user_id": userItem.user_id,
+                    "item_name": userItem.item_name,
+                    "count": userItem.count,
+                    "category": item.item_category,
+                    "consume_date": userItem.consume_date.strftime("%Y-%m-%d") if userItem.consume_date is not None else None,
+                })
+        return itemlist
 
     def add_userItem(itemAdd: UserItemAdd):
         with get_db() as db:
