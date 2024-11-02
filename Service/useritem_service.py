@@ -27,7 +27,7 @@ class UserItemService:
     
     def get_all_userItem(user_id: str):
         with get_db() as db:
-            return db.query(UserItem).filter(UserItem.user_id == user_id).all()
+            return db.query(UserItem).filter(UserItem.user_id == user_id, UserItem.count > 0).all()
 
 
     def get_all_userItem_filtered_by_date(user_id, year: int, month: int):
@@ -79,8 +79,8 @@ class UserItemService:
     def consume_userItem(userItemConsume: UserItemConsume):
         with get_db() as db:
             useritem = db.query(UserItem).filter(UserItem.user_id == userItemConsume.user_id, UserItem.item_name == userItemConsume.item_name).first()
-            if useritem.count - userItemConsume.count < 0:
+            if useritem.count - userItemConsume.consume_count < 0:
                 return False
-            useritem.count -= userItemConsume.count
+            useritem.count -= userItemConsume.consume_count
             db.commit()
         return True

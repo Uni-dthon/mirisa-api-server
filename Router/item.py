@@ -29,6 +29,7 @@ def add_items(request: Request, itemadd: ItemAdd):
 """
 유저가 보유한 모든 아이템을 가져온다.
 """
+# 0개 제외
 @router.get("/{user_id}/item", response_model=List[ItemRead])
 def get_userItem_all(request : Request, user_id: str):
     user_item_list = UserItemService.get_all_userItem(user_id)
@@ -38,7 +39,7 @@ def get_userItem_all(request : Request, user_id: str):
 
 """
 유저가 아이템 소비
-TODO : request body에 아이템 개수 추가
+TODO : 소비 기록 추가
 """
 @router.post("/consume")
 def consume_item(request : Request, user_item_consume: UserItemConsume):
