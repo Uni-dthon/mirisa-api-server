@@ -48,7 +48,7 @@ def get_userItem_all(request : Request, user_id: str, category: str = Query(...)
     user = UserService.get_user_by_id(user_id)
     if user is None:
         return JSONResponse(status_code=HTTP_500_INTERNAL_SERVER_ERROR, content={"message": "User not found"})
-    if category == "ALL":
+    if category == "전체":
         user_item_list = UserItemService.get_all_userItem(user_id)
         user_item_list_dict = UserItemService.to_userItem_dict(user_item_list)
     else:
