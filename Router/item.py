@@ -66,14 +66,14 @@ def get_userItem_all(request : Request, user_id: str, category: str = Query(...)
     500: {"description": "실패"}
 })
 def consume_item(request : Request, user_item_consume: UserItemConsume):
-    result = UserItemService.consume_userItem(user_item_consume)
-    if result is False:
-        return JSONResponse(status_code=HTTP_400_BAD_REQUEST, content={"message": "Item consume failed"})
     consume_history = ConsumeService.consume_history_db(user_item_consume)
     ConsumeService.purchase_history_save(consume_history)
     expectation = ConsumeService.calculate_consume_expectation(user_item_consume.user_id, user_item_consume.item_name)
     if expectation:
         ConsumeService.set_consume_expectation(user_item_consume.user_id, user_item_consume.item_name, expectation)
+    result = UserItemService.consume_userItem(user_item_consume, expectation)
+    if result is False:
+        return JSONResponse(status_code=HTTP_400_BAD_REQUEST, content={"message": "Item consume failed"})
     return JSONResponse(status_code=HTTP_200_OK, content={"message": "Item consumed successfully"})
 
 
