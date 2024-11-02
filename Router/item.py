@@ -44,12 +44,12 @@ def add_items(request: Request, itemadd: ItemAdd):
     200: {"description": "성공", "content": {"application/json": {"example": {"items": user_item_list_dict_example}}}},
     500: {"description": "실패"}
 }, response_model=List[ItemRead])
-def get_userItem_all(request : Request, user_id: str):
+def get_userItem_all(request : Request, user_id: str, category: str = Query(...)):
     user = UserService.get_user_by_id(user_id)
     if user is None:
         return JSONResponse(status_code=HTTP_500_INTERNAL_SERVER_ERROR, content={"message": "User not found"})
-    user_item_list = UserItemService.get_all_userItem(user_id)
-    user_item_list_dict = UserItemService.to_userItem_dict(user_item_list)
+    user_item_list = UserItemService.get_all_userItem_filtered_by_category(user_id, category)
+    user_item_list_dict = UserItemService.to_userItem_dict(user_item_list, category)
     return JSONResponse(status_code=HTTP_200_OK, content={"items": user_item_list_dict})
 
 
@@ -75,7 +75,6 @@ def consume_item(request : Request, user_item_consume: UserItemConsume):
 
 """
 유저가 아이템 추가
-TODO : request body에 아이탬 개수 추가
 """
 @router.post("/addone", summary="물품 하나 추가", description="물품 하나 추가", responses={
     200: {"description": "성공", "content": {"application/json": {"example": {"message": "Item added successfully"}}}},

@@ -37,16 +37,15 @@ class UserItemService:
 
     def to_userItem_dict(userItemList: List[UserItem]):
         itemlist = []
-        with get_db() as db:
-            for userItem in userItemList:
-                item = db.query(Item).filter(Item.item_name == userItem.item_name).first()
-                itemlist.append({
-                    "user_id": userItem.user_id,
-                    "item_name": userItem.item_name,
-                    "count": userItem.count,
-                    "category": item.item_category,
-                    "consume_date": userItem.consume_date.strftime("%Y-%m-%d") if userItem.consume_date is not None else None,
-                })
+
+        for userItem in userItemList:
+            itemlist.append({
+                "user_id": userItem.user_id,
+                "item_name": userItem.item_name,
+                "count": userItem.count,
+                "category": category,
+                "consume_date": userItem.consume_date.strftime("%Y-%m-%d") if userItem.consume_date is not None else None,
+            })
         return itemlist
 
     def add_userItem(itemAdd: UserItemAdd):
