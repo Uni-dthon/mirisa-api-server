@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from starlette.status import *
 import uvicorn
 from Database.database import db, create_database, engine
-from Router import item, login
+from Router import item, login, price
 from dotenv import load_dotenv
 create_database()
 
@@ -39,6 +39,7 @@ app = FastAPI(
 
 app.include_router(item.router)
 app.include_router(login.router)
+app.include_router(price.router)
 
 # CORS
 origins = [
