@@ -40,7 +40,7 @@ def get_userItem_all(request : Request, user_id: str):
 유저가 아이템 소비
 TODO : request body에 아이템 개수 추가
 """
-@router.post("/{user_id}/item/{item_name}/consume")
+@router.post("/consume")
 def consume_item(request : Request, user_id: str, user_item_consume: UserItemConsume):
     result = UserItemService.consume_userItem(user_item_consume)
     if result is False:
