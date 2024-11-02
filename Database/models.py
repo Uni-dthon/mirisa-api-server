@@ -55,15 +55,15 @@ class ConsumeHistory(BaseEntity):
     __tablename__ = "consume_history"
     consume_history_id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("user.user_id"), nullable=False)
-    item_id = Column(Integer, ForeignKey("item.item_id"), nullable=False)
+    item_id = Column(Integer, ForeignKey("user_item.item_id"), nullable=False)
     count = Column(Integer, nullable=False)
     date = Column(DateTime, nullable=False)
 
 class PurchaseHistory(BaseEntity):
     __tablename__ = "purchase_history"
     purchase_history_id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, nullable=False)
-    item_id = Column(Integer, nullable=False)
+    user_id = Column(Integer, ForeignKey("user.user_id"), nullable=False)
+    item_id = Column(Integer, ForeignKey("user_item.item_id"), nullable=False)
     price = Column(Integer, nullable=False)
     count = Column(Integer, nullable=False)
     date = Column(DateTime, nullable=False)
