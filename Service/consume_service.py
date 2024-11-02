@@ -15,4 +15,4 @@ class ConsumeService:
 
     def get_consume_histories_by_item_id(item_id: str):
         with get_db() as db:
-            return db.query(ConsumeHistory).filter(ConsumeHistory.item_id == item_id).all()
+            return db.query(ConsumeHistory).filter(ConsumeHistory.item_id == item_id).order_by(ConsumeHistory.date.asc()).all()
