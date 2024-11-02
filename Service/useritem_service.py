@@ -19,3 +19,6 @@ class UserItemService:
             db_session.add(useritem)
         db_session.commit()
         return True
+    
+    def get_all_userItem(user_id: str):
+        return db_session.query(UserItem).filter(UserItem.user_id == user_id).all()
