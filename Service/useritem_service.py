@@ -109,11 +109,12 @@ class UserItemService:
         with get_db() as db:
             for addItem in itemAdd.items:
                 useritem = db.query(UserItem).filter(UserItem.user_id == addItem.user_id, UserItem.item_name == addItem.item_name).first()
-
                 if useritem.consume_date is None or useritem.count == 0:
                     useritem.consume_date = addItem.purchase_date
-
-                useritem.count += addItem.count
+                if addItem.count > addItem.price:
+                    useritem.count += addItem.price
+                else:
+                    useritem.count += addItem.count
                 useritem.consume_date += timedelta(days=useritem.consume_expectation * addItem.count)
             db.commit()
         return True

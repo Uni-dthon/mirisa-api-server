@@ -8,7 +8,10 @@ class PurchaseService:
         with get_db() as db:
             for item_add in item.items:
                 item_id = db.query(UserItem).filter(UserItem.user_id == item_add.user_id, UserItem.item_name == item_add.item_name).first().item_id
-                data_list.append(PurchaseHistory(user_id=item_add.user_id, item_id=item_id, price=item_add.price, count=item_add.count, date=item_add.purchase_date))
+                if item_add.count > item_add.price:
+                    data_list.append(PurchaseHistory(user_id=item_add.user_id, item_id=item_id, price=item_add.count, count=item_add.price, date=item_add.purchase_date))
+                else:
+                    data_list.append(PurchaseHistory(user_id=item_add.user_id, item_id=item_id, price=item_add.price, count=item_add.count, date=item_add.purchase_date))
         return data_list
 
 
