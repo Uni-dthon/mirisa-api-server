@@ -24,7 +24,7 @@ def get_expected_price(request : Request, user_id: str, date : str = Query(...))
             purchases = PurchaseService.get_purchase_histories_by_item_id(useritem.item_id)
             if len(purchases) == 0:
                 item = ItemService.get_item(useritem.item_name)
-                price += item.base_price * item.base_count
+                price += item.base_price
             else:
                 avg_count = round(sum([purchase.count for purchase in purchases]) / len(purchases))
                 avg_price = sum([purchase.price for purchase in purchases]) / len(purchases)
@@ -33,4 +33,5 @@ def get_expected_price(request : Request, user_id: str, date : str = Query(...))
     except ValueError:
         return JSONResponse(status_code=HTTP_400_BAD_REQUEST, content={"message": "Invalid date format"})
     except Exception as e:
+        raise e
         return JSONResponse(status_code=HTTP_500_INTERNAL_SERVER_ERROR, content={"message": str(e)})
