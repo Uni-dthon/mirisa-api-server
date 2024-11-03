@@ -33,5 +33,4 @@ def get_expected_price(request : Request, user_id: str, date : str = Query(...))
     except ValueError:
         return JSONResponse(status_code=HTTP_400_BAD_REQUEST, content={"message": "Invalid date format"})
     except Exception as e:
-        raise e
         return JSONResponse(status_code=HTTP_500_INTERNAL_SERVER_ERROR, content={"message": str(e)})
