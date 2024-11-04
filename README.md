@@ -58,6 +58,7 @@ Unid-thon Hackathon에서 만들어진 API 서버입니다.
     bind-address = 0.0.0.0
     mysqlx-bind-address = 0.0.0.0
     ```
+    Restart mysql service
     ```bash
     sudo systemctl restart mysql
     ```
@@ -69,9 +70,7 @@ Unid-thon Hackathon에서 만들어진 API 서버입니다.
     ```
 
 ## API Documentation: Swagger
-    ```
     Open [http://localhost:8000/docs](http://localhost:8000/docs) in your browser for API documentation.
-    ```
 
 ## Project Structure
     ```bash
