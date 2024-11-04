@@ -10,6 +10,7 @@ Unid-thon Hackathon에서 만들어진 API 서버입니다.
 - 유저가 가진 생필품을 사용하고 기록할 수 있는 기능
 - 유저가 물건을 산 가격을 추적하여 다음 해당 물건의 예상 금액을 유추하는 기능
 - 유저가 물건을 소비하는 주기를 추적하여 다음 해당 물건의 예상 소모일을 유추하는 기능
+- Github Action을 통한 AWS 배포 자동화
 
 ## Installation
 
@@ -70,7 +71,7 @@ Unid-thon Hackathon에서 만들어진 API 서버입니다.
     ```
 
 ## API Documentation: Swagger
-    Open [http://localhost:8000/docs](http://localhost:8000/docs) in your browser for API documentation.
+    Open [http://localhost:8000/docs] in your browser for API documentation.
 
 ## Project Structure
     ```bash
